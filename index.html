@@ -4,7 +4,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>陨星 - 题目查看器</title>
+	<title>陨星</title>
 	<!-- Katex CSS -->
 	<link rel="stylesheet" href="https://cdn.jsdmirror.com/npm/katex@0.16.9/dist/katex.min.css">
 	<!-- Highlight.js CSS -->
@@ -18,49 +18,58 @@
 	<link rel="stylesheet" href="https://cdn.jsdmirror.com/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
 	<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-screen-webfont/1.7.0/style.min.css">
 	<script src="https://cdn.jsdmirror.com/npm/clipboard@2.0.11/dist/clipboard.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.jsdmirror.com/npm/lxgw-wenkai-screen-webfont@1.7.0/style.min.css">
 	<style>
+		@font-face {
+			font-family: 'Caveat';
+			src: url('https://jsd-proxy.ygxz.in/gh/googlefonts/caveat/fonts/ttf/Caveat-Regular.ttf') format('truetype');
+			font-weight: 400;
+			font-style: normal;
+			font-display: swap
+		}
+
 		* {
 			margin: 0;
 			padding: 0;
 			box-sizing: border-box;
-			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 		}
 
 		body {
-			background: linear-gradient(135deg, #0c0c2e 0%, #1a1a3e 50%, #0c0c2e 100%);
-			color: #e0e0e0;
 			min-height: 100vh;
 			padding: 20px;
-			background-image:
-				radial-gradient(circle at 10% 20%, rgba(28, 58, 112, 0.15) 0%, transparent 20%),
-				radial-gradient(circle at 90% 80%, rgba(112, 28, 88, 0.15) 0%, transparent 20%);
+			font-family: LXGW Wenkai Screen;
+		}
+
+
+		.header {
+			color: #555;
+			padding: 15px 0;
+			background: linear-gradient(90deg, #ffffff 0%, #f0f8ff 100%);
+			box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			position: fixed;
+			width: 100%;
+			z-index: 1000;
+			margin-left: -20px !important;
+			top: 0
+		}
+
+		.logo {
+			font-size: 32px;
+			font-weight: bold;
+			margin-left: 20px;
+			font-family: 'Caveat'
 		}
 
 		.container {
-			max-width: 1200px;
+			margin-top: 50px !important;
 			margin: 0 auto;
-		}
-
-		header {
-			text-align: center;
-			margin-bottom: 40px;
-			padding: 20px;
-		}
-
-		h1 {
-			font-size: 3.5rem;
-			background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
-			-webkit-background-clip: text;
-			background-clip: text;
-			color: transparent;
-			margin-bottom: 10px;
-			text-shadow: 0 0 20px rgba(106, 17, 203, 0.5);
-			letter-spacing: 2px;
 		}
 
 		.subtitle {
 			font-size: 1.2rem;
-			color: #a0a0c0;
 			margin-bottom: 30px;
 		}
 
@@ -76,11 +85,11 @@
 			}
 
 			.intro-box {
-				grid-column: 1 / 2;
+				grid-column: 1 / 3;
 			}
 
 			.new-problems-box {
-				grid-column: 2 / 3;
+				grid-column: 1 / 3;
 			}
 
 			.comments-box {
@@ -88,25 +97,26 @@
 			}
 		}
 
-		.box {
-			background: rgba(25, 25, 50, 0.7);
-			backdrop-filter: blur(10px);
-			border-radius: 15px;
-			padding: 25px;
-			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-			border: 1px solid rgba(100, 100, 200, 0.2);
-			transition: transform 0.3s ease, box-shadow 0.3s ease;
+		h1 {
+			color: #2c3e50;
+			border-bottom: 2px solid #3498db;
+			padding-bottom: 10px;
 		}
 
-		.box:hover {
-			transform: translateY(-5px);
-			box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+		.box {
+			/* background: rgba(255, 255, 255, 0.7); */
+			/* backdrop-filter: blur(10px); */
+			border-radius: 15px;
+			padding: 25px;
+			margin-left: 80px;
+			/* box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); */
+			/* border: 1px solid rgba(100, 100, 200, 0.2); */
+			transition: transform 0.3s ease, box-shadow 0.3s ease;
 		}
 
 		.box-title {
 			font-size: 1.8rem;
 			margin-bottom: 20px;
-			color: #6a8cff;
 			border-bottom: 2px solid rgba(106, 140, 255, 0.3);
 			padding-bottom: 10px;
 			display: flex;
@@ -126,26 +136,28 @@
 		.markdown-content h2,
 		.markdown-content h3 {
 			margin: 20px 0 10px 0;
-			color: #8a9bff;
 		}
 
 		.markdown-content p {
 			margin-bottom: 15px;
 		}
 
-		.markdown-content code {
-			background: rgba(0, 0, 0, 0.3);
-			padding: 2px 6px;
-			border-radius: 4px;
-			font-family: 'Courier New', monospace;
+		ul {
+			display: block;
+			/* list-style-type: disc; */
+			margin-block-start: 1em;
+			margin-block-end: 1em;
+			padding-inline-start: 40px;
+			unicode-bidi: isolate;
 		}
 
-		.markdown-content pre {
-			background: rgba(0, 0, 0, 0.4);
-			padding: 15px;
-			border-radius: 8px;
-			overflow-x: auto;
-			margin: 15px 0;
+		ol {
+			display: block;
+			/* list-style-type: decimal; */
+			margin-block-start: 1em;
+			margin-block-end: 1em;
+			padding-inline-start: 40px;
+			unicode-bidi: isolate;
 		}
 
 		.problem-list {
@@ -155,13 +167,17 @@
 		.problem-item {
 			padding: 15px;
 			margin-bottom: 15px;
-			background: rgba(40, 40, 70, 0.5);
+			background: rgba(255, 255, 255, 0.5);
 			border-radius: 8px;
-			transition: background 0.3s ease;
+			backdrop-filter: blur(10px);
+			/* box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); */
+			border: 1px solid rgba(100, 100, 200, 0.2);
+			transition: transform 0.3s ease, box-shadow 0.3s ease;
 		}
 
 		.problem-item:hover {
-			background: rgba(50, 50, 90, 0.7);
+			transform: translateY(-5px);
+			box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
 		}
 
 		.problem-link {
@@ -211,19 +227,20 @@
 		}
 
 		pre code {
-			font-family: 'Consolas';
-			display: block;
-			padding: 12px;
-			padding-left: 20px;
-			margin: 2rem 0;
-			background: #f8fafc;
-			border-radius: 10px;
-			border: 1px solid #e2e8f0;
-			overflow-x: auto;
-			overflow-y: auto;
+			font-family: 'Consolas' !important;
+			display: block !important;
+			padding: 12px !important;
+			padding-left: 20px !important;
+			margin: 2rem 0 !important;
+			background: #f8fafc !important;
+			border-radius: 10px !important;
+			border: 1px solid #e2e8f0 !important;
+			color: #1e1e1e !important;
+			overflow-x: auto !important;
+			overflow-y: auto !important;
 			line-height: 1.6 !important;
 			font-size: 0.95rem !important;
-			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
 		}
 
 		table {
@@ -330,33 +347,87 @@
 			background-color: rgb(202, 203, 205);
 			color: rgba(0, 0, 0, 0.8);
 		}
+
+		.sidebar {
+			width: 70px;
+			height: calc(100vh - 70px);
+			position: fixed;
+			background: linear-gradient(180deg, #ffffff 0%, #f0f8ff 100%);
+			border-right: 2px solid #e6f3ff;
+			box-shadow: 2px 0 10px rgba(135, 206, 250, 0.1);
+			transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+			overflow: hidden;
+			backdrop-filter: blur(10px);
+			z-index: 900;
+			margin-top: 50px;
+			margin-left: -20px;
+			padding-top: 10px;
+			color: #2c3e50;
+		}
+
+		.sidebar.expanded {
+			width: 250px
+		}
+
+		.sidebar-item {
+			display: flex;
+			align-items: center;
+			padding: 15px 23px;
+			cursor: pointer;
+		}
+
+		.sidebar-item i {
+			margin-right: 15px;
+			font-size: 18px;
+			min-width: 20px;
+			width: 20px;
+			text-align: center;
+		}
+
+		.sidebar-item span {
+			opacity: 0;
+			visibility: hidden;
+			transition: opacity 0.3s ease, visibility 0.3s ease;
+			white-space: nowrap;
+			overflow: hidden;
+		}
+
+		.sidebar.expanded .sidebar-item span {
+			opacity: 1;
+			visibility: visible;
+		}
+
+		.sidebar-item:hover {
+			background-color: #f9f9f9
+		}
 	</style>
 </head>
 
 <body>
+	<header class="header">
+		<div class="logo">YunXing</div>
+	</header>
+	<div class="sidebar" id="sidebar">
+		<div class="sidebar-item" onclick="navigateTo('/')"><i class="fas fa-home"></i><span>首页</span></div>
+	</div>
 	<div class="container">
-		<header>
-			<h1>陨星</h1>
-			<div class="subtitle">Markdown + Katex + Hljs 题目查看器</div>
-		</header>
-
 		<div class="content-grid">
 			<div class="box intro-box">
-				<h2 class="box-title">📖 介绍</h2>
+				<h2 class="box-title"><i class="fas fa-book"></i> 介绍</h2>
 				<div class="markdown-content" id="intro-content">
 					<div class="loading">加载中...</div>
 				</div>
 			</div>
 
 			<div class="box new-problems-box">
-				<h2 class="box-title">🆕 最新题目</h2>
+				<h2 class="box-title"><i class="fas fa-list"></i> 最新题目</h2>
 				<div id="new-problems-content">
 					<div class="loading">加载中...</div>
 				</div>
 			</div>
 
 			<div class="box comments-box">
-				<h2 class="box-title">💬 评论</h2>
+				<h2 class="box-title"><i class="fas fa-comments"></i> 评论</h2>
 				<div class="giscus-comments" id="giscus-comments">
 					<!-- Giscus评论系统将在这里加载 -->
 				</div>
@@ -364,7 +435,7 @@
 		</div>
 
 		<footer>
-			<p>陨星题目查看器 &copy; 2023 | 支持 Markdown + Katex + Hljs 渲染</p>
+			<p>YunXing &copy; 2025</p>
 		</footer>
 	</div>
 
@@ -387,6 +458,74 @@
 				return hljs.highlightAuto(code).value;
 			},
 			gfm: true
+		});
+
+		// 修改顶栏点击事件
+		document.querySelector('.logo').addEventListener('click', function () {
+			window.location.href = window.location.origin + window.location.pathname;
+		});
+
+		// 导航函数
+		function navigateTo(path) {
+			if (path === '/') {
+				// 返回首页
+				window.location.href = window.location.origin + window.location.pathname;
+			}
+		}
+
+		document.addEventListener('DOMContentLoaded', function () {
+			const sidebar = document.getElementById('sidebar');
+			// const contentArea = document.getElementById('container');
+
+			function expandSidebar() {
+				if (sidebar) {
+					sidebar.classList.add('expanded');
+				}
+				// if (contentArea) {
+				// 	contentArea.classList.add('expanded');
+				// }
+			}
+
+			function collapseSidebar() {
+				if (sidebar) {
+					sidebar.classList.remove('expanded');
+				}
+				// if (contentArea) {
+				// 	contentArea.classList.remove('expanded');
+				// }
+			}
+
+			if (sidebar) {
+				sidebar.addEventListener('touchstart', function (event) {
+					expandSidebar();
+				});
+
+				sidebar.addEventListener('touchend', function (event) {
+					collapseSidebar();
+				});
+
+				sidebar.addEventListener('touchleave', function (event) {
+					collapseSidebar();
+				});
+
+				sidebar.addEventListener('touchcancel', function (event) {
+					collapseSidebar();
+				});
+			}
+		});
+		document.addEventListener('DOMContentLoaded', function () {
+			const sidebar = document.getElementById('sidebar');
+			// const contentArea = document.getElementById('contentArea');
+
+			if (sidebar) {
+				sidebar.addEventListener('mouseenter', function () {
+					sidebar.classList.add('expanded');
+				});
+
+				sidebar.addEventListener('mouseleave', function () {
+					sidebar.classList.remove('expanded');
+				});
+			}
 		});
 
 		function addCopyButtons() {
@@ -443,7 +582,7 @@
 		// 加载介绍内容
 		async function loadIntro() {
 			try {
-				const response = await fetch('./sources/index.md');
+				const response = await fetch('https://raw.bgithub.xyz/SnakeBloc-zym/SnakeBloc-zym.github.io/refs/heads/main/sources/index.md');
 				if (!response.ok) throw new Error('无法加载介绍内容');
 
 				const markdown = await response.text();
@@ -462,7 +601,7 @@
 		// 加载最新题目
 		async function loadNewProblems() {
 			try {
-				const response = await fetch('./sources/newp.json');
+				const response = await fetch('https://raw.bgithub.xyz/SnakeBloc-zym/SnakeBloc-zym.github.io/refs/heads/main/sources/newp.json');
 				if (!response.ok) throw new Error('无法加载最新题目');
 
 				const data = await response.json();
@@ -472,14 +611,14 @@
 					let html = '<ul class="problem-list">';
 					data.problems.forEach(problem => {
 						html += `
-                            <li class="problem-item">
-                                <a href="problem.html?id=${problem.id}" class="problem-link">${problem.title}</a>
-                                <div class="problem-meta">
-                                    <span>难度: ${problem.difficulty}</span>
-                                    <span>${problem.date}</span>
-                                </div>
-                            </li>
-                        `;
+            <li class="problem-item">
+              <a href="?id=${problem.id}" class="problem-link">${problem.title}</a>
+              <div class="problem-meta">
+                <span>难度: ${problem.difficulty}</span>
+                <span>${problem.date}</span>
+              </div>
+            </li>
+          `;
 					});
 					html += '</ul>';
 					problemsContent.innerHTML = html;
@@ -490,6 +629,59 @@
 				document.getElementById('new-problems-content').innerHTML =
 					`<div class="error">加载最新题目时出错: ${error.message}</div>`;
 			}
+		}
+
+		// 添加问题页面处理
+		const urlParams = new URLSearchParams(window.location.search);
+		const problemId = urlParams.get('id');
+
+		if (problemId) {
+			// 题目页面
+			document.querySelector('.intro-box').style.display = 'none';
+			document.querySelector('.new-problems-box').style.display = 'none';
+
+			const problemBox = document.createElement('div');
+			problemBox.className = 'box';
+			problemBox.innerHTML = `
+      <!-- <h2 class="box-title"><i class="fas fa-book"></i> 题目: ${problemId}</h2> -->
+      <div class="markdown-content" id="problem-content">
+        <div class="loading">加载中...</div>
+      </div>
+    `;
+			document.querySelector('.content-grid').insertBefore(problemBox, document.querySelector('.comments-box'));
+
+			// 使用jsDelivr CDN加载题目内容
+			const mdUrl = `https://raw.bgithub.xyz/SnakeBloc-zym/SnakeBloc-zym.github.io/refs/heads/main/sources/problem/${problemId}.md`;
+
+			fetch(mdUrl)
+				.then(response => {
+					if (!response.ok) throw new Error('题目不存在');
+					return response.text();
+				})
+				.then(markdown => {
+					document.getElementById('problem-content').innerHTML = marked.parse(markdown);
+					// 渲染KaTeX公式
+					if (window.renderMathInElement) {
+						renderMathInElement(document.getElementById('problem-content'), {
+							delimiters: [
+								{ left: "$$", right: "$$", display: true },
+								{ left: "\\[", right: "\\]", display: true },
+								{ left: "\\(", right: "\\)", display: false },
+								{ left: "$", right: "$", display: false }
+							],
+							throwOnError: false
+						});
+					}
+				})
+				.catch(error => {
+					document.getElementById('problem-content').innerHTML =
+						`<div class="error">加载题目时出错: ${error.message}</div>`;
+				});
+		} else {
+			// 主页，修复加载问题
+			loadIntro();
+			loadNewProblems();
+			initGiscus();
 		}
 
 		// 初始化Giscus评论系统
@@ -563,85 +755,6 @@
 				}, 200); // 给Marked.js一些时间渲染Markdown
 			} else {
 				// 如果库还没加载完，再等一下
-				setTimeout(renderAllMath, 100);
-			}
-		}
-	</script>
-
-	<script>
-		// 检测是否为题目页面
-		const urlParams = new URLSearchParams(window.location.search);
-		const problemId = urlParams.get('id');
-
-		if (problemId) {
-			// 题目页面
-			document.querySelector('.intro-box').style.display = 'none';
-			document.querySelector('.new-problems-box').style.display = 'none';
-
-			const problemBox = document.createElement('div');
-			problemBox.className = 'box';
-			problemBox.innerHTML = `
-      <h2 class="box-title">题目: ${problemId}</h2>
-      <div class="markdown-content" id="problem-content">
-        <div class="loading">加载中...</div>
-      </div>
-    `;
-			document.querySelector('.content-grid').insertBefore(problemBox, document.querySelector('.comments-box'));
-
-			// 加载题目内容
-			fetch(`./sources/problem/${problemId}.md`)
-				.then(response => {
-					if (!response.ok) throw new Error('题目不存在');
-					return response.text();
-				})
-				.then(markdown => {
-					document.getElementById('problem-content').innerHTML = marked.parse(markdown);
-					// 渲染KaTeX公式
-					if (window.renderMathInElement) {
-						renderMathInElement(document.getElementById('problem-content'), {
-							delimiters: [
-								{ left: "$$", right: "$$", display: true },
-								{ left: "\\[", right: "\\]", display: true },
-								{ left: "\\(", right: "\\)", display: false },
-								{ left: "$", right: "$", display: false }
-							],
-							throwOnError: false
-						});
-					}
-				})
-				.catch(error => {
-					document.getElementById('problem-content').innerHTML =
-						`<div class="error">加载题目时出错: ${error.message}</div>`;
-				});
-		} else {
-			// 主页，修复加载问题
-			// GitHub Pages 需要使用相对路径
-			loadIntro();
-			loadNewProblems();
-			initGiscus();
-		}
-
-		// 确保所有库都加载完成后渲染页面中的数学公式
-		if (document.readyState === 'loading') {
-			document.addEventListener('DOMContentLoaded', renderAllMath);
-		} else {
-			setTimeout(renderAllMath, 100);
-		}
-
-		function renderAllMath() {
-			if (window.katex && window.renderMathInElement) {
-				setTimeout(() => {
-					renderMathInElement(document.body, {
-						delimiters: [
-							{ left: "$$", right: "$$", display: true },
-							{ left: "\\[", right: "\\]", display: true },
-							{ left: "\\(", right: "\\)", display: false },
-							{ left: "$", right: "$", display: false }
-						],
-						throwOnError: false
-					});
-				}, 200);
-			} else {
 				setTimeout(renderAllMath, 100);
 			}
 		}
