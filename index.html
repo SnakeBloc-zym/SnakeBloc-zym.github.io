@@ -567,6 +567,85 @@
 			}
 		}
 	</script>
+
+	<script>
+		// 检测是否为题目页面
+		const urlParams = new URLSearchParams(window.location.search);
+		const problemId = urlParams.get('id');
+
+		if (problemId) {
+			// 题目页面
+			document.querySelector('.intro-box').style.display = 'none';
+			document.querySelector('.new-problems-box').style.display = 'none';
+
+			const problemBox = document.createElement('div');
+			problemBox.className = 'box';
+			problemBox.innerHTML = `
+      <h2 class="box-title">题目: ${problemId}</h2>
+      <div class="markdown-content" id="problem-content">
+        <div class="loading">加载中...</div>
+      </div>
+    `;
+			document.querySelector('.content-grid').insertBefore(problemBox, document.querySelector('.comments-box'));
+
+			// 加载题目内容
+			fetch(`./sources/problem/${problemId}.md`)
+				.then(response => {
+					if (!response.ok) throw new Error('题目不存在');
+					return response.text();
+				})
+				.then(markdown => {
+					document.getElementById('problem-content').innerHTML = marked.parse(markdown);
+					// 渲染KaTeX公式
+					if (window.renderMathInElement) {
+						renderMathInElement(document.getElementById('problem-content'), {
+							delimiters: [
+								{ left: "$$", right: "$$", display: true },
+								{ left: "\\[", right: "\\]", display: true },
+								{ left: "\\(", right: "\\)", display: false },
+								{ left: "$", right: "$", display: false }
+							],
+							throwOnError: false
+						});
+					}
+				})
+				.catch(error => {
+					document.getElementById('problem-content').innerHTML =
+						`<div class="error">加载题目时出错: ${error.message}</div>`;
+				});
+		} else {
+			// 主页，修复加载问题
+			// GitHub Pages 需要使用相对路径
+			loadIntro();
+			loadNewProblems();
+			initGiscus();
+		}
+
+		// 确保所有库都加载完成后渲染页面中的数学公式
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', renderAllMath);
+		} else {
+			setTimeout(renderAllMath, 100);
+		}
+
+		function renderAllMath() {
+			if (window.katex && window.renderMathInElement) {
+				setTimeout(() => {
+					renderMathInElement(document.body, {
+						delimiters: [
+							{ left: "$$", right: "$$", display: true },
+							{ left: "\\[", right: "\\]", display: true },
+							{ left: "\\(", right: "\\)", display: false },
+							{ left: "$", right: "$", display: false }
+						],
+						throwOnError: false
+					});
+				}, 200);
+			} else {
+				setTimeout(renderAllMath, 100);
+			}
+		}
+	</script>
 </body>
 
 </html>
