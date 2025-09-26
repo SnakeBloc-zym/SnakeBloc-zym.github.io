@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>题目查看 - 陨星</title>
+    <!-- Katex CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdmirror.com/npm/katex@0.16.9/dist/katex.min.css">
+    <!-- Highlight.js CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdmirror.com/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
+    <script src="https://cdn.jsdmirror.com/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+    <link rel="shortcut icon" href="https://cdn.luogu.com.cn/upload/usericon/1393230.png">
+    <link rel="stylesheet" href="https://cdn.jsdmirror.com/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0c0c2e 0%, #1a1a3e 50%, #0c0c2e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(28, 58, 112, 0.15) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(112, 28, 88, 0.15) 0%, transparent 20%);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+        }
+
+        .back-button {
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            color: #6a8cff;
+            text-decoration: none;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .back-button:hover {
+            color: #8aafff;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(106, 17, 203, 0.5);
+        }
+
+        .problem-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            color: #a0a0c0;
+            font-size: 0.9rem;
+        }
+
+        .problem-content {
+            background: rgba(25, 25, 50, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(100, 100, 200, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .markdown-content {
+            line-height: 1.7;
+        }
+
+        .markdown-content h1, .markdown-content h2, .markdown-content h3 {
+            margin: 25px 0 15px 0;
+            color: #8a9bff;
+            border-bottom: 1px solid rgba(138, 155, 255, 0.3);
+            padding-bottom: 5px;
+        }
+
+        .markdown-content h1 {
+            font-size: 1.8rem;
+        }
+
+        .markdown-content h2 {
+            font-size: 1.5rem;
+        }
+
+        .markdown-content h3 {
+            font-size: 1.3rem;
+        }
+
+        .markdown-content p {
+            margin-bottom: 15px;
+        }
+
+        .markdown-content code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .markdown-content pre {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .markdown-content blockquote {
+            border-left: 4px solid #6a8cff;
+            padding-left: 15px;
+            margin: 15px 0;
+            color: #c0c0e0;
+            background: rgba(106, 140, 255, 0.1);
+            padding: 10px 15px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .markdown-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .markdown-content th, .markdown-content td {
+            border: 1px solid rgba(100, 100, 200, 0.3);
+            padding: 10px;
+            text-align: left;
+        }
+
+        .markdown-content th {
+            background: rgba(106, 140, 255, 0.2);
+            color: #8a9bff;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #a0a0c0;
+            font-size: 1.2rem;
+        }
+
+        .error {
+            color: #ff6b6b;
+            padding: 20px;
+            background: rgba(255, 107, 107, 0.1);
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .codecopy-btn {
+            opacity: 0.7;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #e0e0e0;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .codecopy-btn:hover {
+            opacity: 1;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: #7070a0;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .back-button {
+                position: relative;
+                left: 0;
+                top: 0;
+                margin-bottom: 15px;
+                display: inline-block;
+            }
+            
+            .problem-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .problem-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> 返回首页
+            </a>
+            <h1 id="problem-title">题目加载中...</h1>
+            <div class="problem-info">
+                <span id="problem-id">ID: 加载中...</span>
+                <span id="problem-difficulty">难度: 加载中...</span>
+                <span id="problem-date">日期: 加载中...</span>
+            </div>
+        </header>
+        
+        <div class="problem-content">
+            <div class="markdown-content" id="problem-content">
+                <div class="loading">题目内容加载中...</div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>陨星题目查看器 &copy; 2023 | 支持 Markdown + Katex + Hljs 渲染</p>
+        </footer>
+    </div>
+
+    <!-- Marked.js for Markdown parsing -->
+    <script src="https://cdn.jsdmirror.com/npm/marked/marked.min.js"></script>
+    <!-- Katex for math rendering -->
+    <script src="https://cdn.jsdmirror.com/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <!-- Katex auto-render script -->
+    <script src="https://cdn.jsdmirror.com/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <!-- Clipboard.js for copy buttons -->
+    <script src="https://cdn.jsdmirror.com/npm/clipboard@2.0.11/dist/clipboard.min.js"></script>
+
+    <script>
+        // 配置Marked.js以支持Katex和代码高亮
+        marked.setOptions({
+            highlight: function(code, lang) {
+                if (lang && hljs.getLanguage(lang)) {
+                    return hljs.highlight(code, { language: lang }).value;
+                }
+                return hljs.highlightAuto(code).value;
+            },
+            gfm: true
+        });
+
+        // 添加复制按钮功能
+        function addCopyButtons() {
+            const preElements = document.querySelectorAll('pre');
+            preElements.forEach(preElement => {
+                const codeElement = preElement.querySelector('code');
+                if (!codeElement) return;
+                
+                const button = document.createElement('button');
+                button.innerHTML = '<i class="fas fa-copy"></i>';
+                button.classList.add('codecopy-btn');
+                button.title = '复制代码';
+                
+                preElement.style.position = 'relative';
+                preElement.appendChild(button);
+                
+                new ClipboardJS(button, {
+                    text: () => codeElement.innerText
+                }).on('success', e => {
+                    e.trigger.innerHTML = '<i class="fas fa-check"></i>';
+                    setTimeout(() => e.trigger.innerHTML = '<i class="fas fa-copy"></i>', 1000);
+                }).on('error', e => {
+                    e.trigger.innerHTML = '<i class="fas fa-times"></i>';
+                    setTimeout(() => e.trigger.innerHTML = '<i class="fas fa-copy"></i>', 1000);
+                });
+            });
+        }
+
+        // 渲染Katex公式
+        function renderMath(element) {
+            if (window.renderMathInElement) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "\\[", right: "\\]", display: true },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "$", right: "$", display: false }
+                    ],
+                    throwOnError: false
+                });
+            }
+        }
+
+        // 从URL获取题目ID
+        function getProblemIdFromURL() {
+            const path = window.location.pathname;
+            const match = path.match(/\/problem\/(YX[a-zA-Z0-9]+)$/);
+            if (match) {
+                return match[1];
+            }
+            
+            // 如果URL是problem.html?id=YX0001格式
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('id');
+        }
+
+        // 加载题目内容
+        async function loadProblem() {
+            const problemId = getProblemIdFromURL();
+            
+            if (!problemId) {
+                document.getElementById('problem-content').innerHTML = 
+                    '<div class="error">未指定题目ID</div>';
+                return;
+            }
+
+            try {
+                // 更新页面标题和ID显示
+                document.getElementById('problem-title').textContent = `题目: ${problemId}`;
+                document.getElementById('problem-id').textContent = `ID: ${problemId}`;
+                document.title = `${problemId} - 陨星`;
+
+                // 加载题目Markdown文件
+                const response = await fetch(`./sources/problem/${problemId}.md`);
+                if (!response.ok) throw new Error('题目文件不存在或无法访问');
+                
+                const markdown = await response.text();
+                const contentElement = document.getElementById('problem-content');
+                contentElement.innerHTML = marked.parse(markdown);
+
+                // 等待DOM更新后渲染公式和添加复制按钮
+                setTimeout(() => {
+                    renderMath(contentElement);
+                    addCopyButtons();
+                    hljs.highlightAll();
+                    
+                    // 尝试从Markdown中提取题目信息（如果存在元数据）
+                    extractProblemInfo(markdown, problemId);
+                }, 100);
+
+            } catch (error) {
+                document.getElementById('problem-content').innerHTML = 
+                    `<div class="error">加载题目时出错: ${error.message}</div>`;
+                console.error('Error loading problem:', error);
+            }
+        }
+
+        // 从Markdown中提取题目信息（如果存在YAML front matter）
+        function extractProblemInfo(markdown, problemId) {
+            // 简单的元数据提取（可以扩展为解析YAML front matter）
+            const titleMatch = markdown.match(/^#\s+(.+)$/m);
+            if (titleMatch) {
+                document.getElementById('problem-title').textContent = titleMatch[1];
+                document.title = `${titleMatch[1]} - 陨星`;
+            }
+
+            // 尝试从newp.json获取更多信息
+            fetch('./sources/newp.json')
+                .then(response => response.ok ? response.json() : null)
+                .then(data => {
+                    if (data && data.problems) {
+                        const problemInfo = data.problems.find(p => p.id === problemId);
+                        if (problemInfo) {
+                            if (problemInfo.difficulty) {
+                                document.getElementById('problem-difficulty').textContent = 
+                                    `难度: ${problemInfo.difficulty}`;
+                            }
+                            if (problemInfo.date) {
+                                document.getElementById('problem-date').textContent = 
+                                    `日期: ${problemInfo.date}`;
+                            }
+                        }
+                    }
+                })
+                .catch(error => console.log('无法加载题目额外信息:', error));
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', loadProblem);
+    </script>
+</body>
+</html>
