@@ -1,399 +1,572 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>题目查看 - 陨星</title>
-    <!-- Katex CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdmirror.com/npm/katex@0.16.9/dist/katex.min.css">
-    <!-- Highlight.js CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdmirror.com/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
-    <script src="https://cdn.jsdmirror.com/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
-    <link rel="shortcut icon" href="https://cdn.luogu.com.cn/upload/usericon/1393230.png">
-    <link rel="stylesheet" href="https://cdn.jsdmirror.com/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>陨星 - 题目查看器</title>
+	<!-- Katex CSS -->
+	<link rel="stylesheet" href="https://cdn.jsdmirror.com/npm/katex@0.16.9/dist/katex.min.css">
+	<!-- Highlight.js CSS -->
+	<link rel="stylesheet"
+		href="https://cdn.jsdmirror.com/gh/highlightjs/cdn-release@11.9.0/build/styles/github.min.css">
+	<script src="https://cdn.jsdmirror.com/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+	<!-- Giscus CSS -->
+	<link rel="stylesheet" href="https://unpkg.com/giscus@1.3.0/dist/giscus.css">
+	<link rel="shortcut icon" href="https://cdn.luogu.com.cn/upload/usericon/1393230.png">
+	<script src="https://cdn.jsdmirror.com/npm/anchor-js/anchor.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.jsdmirror.com/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+	<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-screen-webfont/1.7.0/style.min.css">
+	<script src="https://cdn.jsdmirror.com/npm/clipboard@2.0.11/dist/clipboard.min.js"></script>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+		}
 
-        body {
-            background: linear-gradient(135deg, #0c0c2e 0%, #1a1a3e 50%, #0c0c2e 100%);
-            color: #e0e0e0;
-            min-height: 100vh;
-            padding: 20px;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(28, 58, 112, 0.15) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(112, 28, 88, 0.15) 0%, transparent 20%);
-        }
+		body {
+			background: linear-gradient(135deg, #0c0c2e 0%, #1a1a3e 50%, #0c0c2e 100%);
+			color: #e0e0e0;
+			min-height: 100vh;
+			padding: 20px;
+			background-image:
+				radial-gradient(circle at 10% 20%, rgba(28, 58, 112, 0.15) 0%, transparent 20%),
+				radial-gradient(circle at 90% 80%, rgba(112, 28, 88, 0.15) 0%, transparent 20%);
+		}
 
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
+		.container {
+			max-width: 1200px;
+			margin: 0 auto;
+		}
 
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 20px;
-        }
+		header {
+			text-align: center;
+			margin-bottom: 40px;
+			padding: 20px;
+		}
 
-        .back-button {
-            position: absolute;
-            left: 20px;
-            top: 20px;
-            color: #6a8cff;
-            text-decoration: none;
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: color 0.3s ease;
-        }
+		h1 {
+			font-size: 3.5rem;
+			background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+			-webkit-background-clip: text;
+			background-clip: text;
+			color: transparent;
+			margin-bottom: 10px;
+			text-shadow: 0 0 20px rgba(106, 17, 203, 0.5);
+			letter-spacing: 2px;
+		}
 
-        .back-button:hover {
-            color: #8aafff;
-        }
+		.subtitle {
+			font-size: 1.2rem;
+			color: #a0a0c0;
+			margin-bottom: 30px;
+		}
 
-        h1 {
-            font-size: 2.5rem;
-            background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 10px;
-            text-shadow: 0 0 20px rgba(106, 17, 203, 0.5);
-        }
+		.content-grid {
+			display: grid;
+			grid-template-columns: 1fr;
+			gap: 30px;
+		}
 
-        .problem-info {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            color: #a0a0c0;
-            font-size: 0.9rem;
-        }
+		@media (min-width: 768px) {
+			.content-grid {
+				grid-template-columns: repeat(2, 1fr);
+			}
 
-        .problem-content {
-            background: rgba(25, 25, 50, 0.7);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(100, 100, 200, 0.2);
-            margin-bottom: 30px;
-        }
+			.intro-box {
+				grid-column: 1 / 2;
+			}
 
-        .markdown-content {
-            line-height: 1.7;
-        }
+			.new-problems-box {
+				grid-column: 2 / 3;
+			}
 
-        .markdown-content h1, .markdown-content h2, .markdown-content h3 {
-            margin: 25px 0 15px 0;
-            color: #8a9bff;
-            border-bottom: 1px solid rgba(138, 155, 255, 0.3);
-            padding-bottom: 5px;
-        }
+			.comments-box {
+				grid-column: 1 / 3;
+			}
+		}
 
-        .markdown-content h1 {
-            font-size: 1.8rem;
-        }
+		.box {
+			background: rgba(25, 25, 50, 0.7);
+			backdrop-filter: blur(10px);
+			border-radius: 15px;
+			padding: 25px;
+			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+			border: 1px solid rgba(100, 100, 200, 0.2);
+			transition: transform 0.3s ease, box-shadow 0.3s ease;
+		}
 
-        .markdown-content h2 {
-            font-size: 1.5rem;
-        }
+		.box:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+		}
 
-        .markdown-content h3 {
-            font-size: 1.3rem;
-        }
+		.box-title {
+			font-size: 1.8rem;
+			margin-bottom: 20px;
+			color: #6a8cff;
+			border-bottom: 2px solid rgba(106, 140, 255, 0.3);
+			padding-bottom: 10px;
+			display: flex;
+			align-items: center;
+		}
 
-        .markdown-content p {
-            margin-bottom: 15px;
-        }
+		.box-title i {
+			margin-right: 10px;
+			font-size: 1.5rem;
+		}
 
-        .markdown-content code {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-        }
+		.markdown-content {
+			line-height: 1.6;
+		}
 
-        .markdown-content pre {
-            background: rgba(0, 0, 0, 0.4);
-            padding: 15px;
-            border-radius: 8px;
-            overflow-x: auto;
-            margin: 20px 0;
-            position: relative;
-        }
+		.markdown-content h1,
+		.markdown-content h2,
+		.markdown-content h3 {
+			margin: 20px 0 10px 0;
+			color: #8a9bff;
+		}
 
-        .markdown-content blockquote {
-            border-left: 4px solid #6a8cff;
-            padding-left: 15px;
-            margin: 15px 0;
-            color: #c0c0e0;
-            background: rgba(106, 140, 255, 0.1);
-            padding: 10px 15px;
-            border-radius: 0 8px 8px 0;
-        }
+		.markdown-content p {
+			margin-bottom: 15px;
+		}
 
-        .markdown-content table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            background: rgba(0, 0, 0, 0.2);
-        }
+		.markdown-content code {
+			background: rgba(0, 0, 0, 0.3);
+			padding: 2px 6px;
+			border-radius: 4px;
+			font-family: 'Courier New', monospace;
+		}
 
-        .markdown-content th, .markdown-content td {
-            border: 1px solid rgba(100, 100, 200, 0.3);
-            padding: 10px;
-            text-align: left;
-        }
+		.markdown-content pre {
+			background: rgba(0, 0, 0, 0.4);
+			padding: 15px;
+			border-radius: 8px;
+			overflow-x: auto;
+			margin: 15px 0;
+		}
 
-        .markdown-content th {
-            background: rgba(106, 140, 255, 0.2);
-            color: #8a9bff;
-        }
+		.problem-list {
+			list-style-type: none;
+		}
 
-        .loading {
-            text-align: center;
-            padding: 50px;
-            color: #a0a0c0;
-            font-size: 1.2rem;
-        }
+		.problem-item {
+			padding: 15px;
+			margin-bottom: 15px;
+			background: rgba(40, 40, 70, 0.5);
+			border-radius: 8px;
+			transition: background 0.3s ease;
+		}
 
-        .error {
-            color: #ff6b6b;
-            padding: 20px;
-            background: rgba(255, 107, 107, 0.1);
-            border-radius: 8px;
-            margin: 20px 0;
-            text-align: center;
-        }
+		.problem-item:hover {
+			background: rgba(50, 50, 90, 0.7);
+		}
 
-        .codecopy-btn {
-            opacity: 0.7;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #e0e0e0;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+		.problem-link {
+			color: #6a8cff;
+			text-decoration: none;
+			font-size: 1.1rem;
+			display: block;
+			margin-bottom: 5px;
+		}
 
-        .codecopy-btn:hover {
-            opacity: 1;
-            background: rgba(255, 255, 255, 0.2);
-        }
+		.problem-link:hover {
+			color: #8aafff;
+			text-decoration: underline;
+		}
 
-        footer {
-            text-align: center;
-            margin-top: 50px;
-            padding: 20px;
-            color: #7070a0;
-            font-size: 0.9rem;
-        }
+		.problem-meta {
+			font-size: 0.9rem;
+			color: #a0a0c0;
+			display: flex;
+			justify-content: space-between;
+		}
 
-        @media (max-width: 768px) {
-            .back-button {
-                position: relative;
-                left: 0;
-                top: 0;
-                margin-bottom: 15px;
-                display: inline-block;
-            }
-            
-            .problem-info {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .problem-content {
-                padding: 20px;
-            }
-        }
-    </style>
+		.giscus-comments {
+			min-height: 400px;
+		}
+
+		footer {
+			text-align: center;
+			margin-top: 50px;
+			padding: 20px;
+			color: #7070a0;
+			font-size: 0.9rem;
+		}
+
+		.loading {
+			text-align: center;
+			padding: 20px;
+			color: #a0a0c0;
+		}
+
+		.error {
+			color: #ff6b6b;
+			padding: 10px;
+			background: rgba(255, 107, 107, 0.1);
+			border-radius: 5px;
+			margin: 10px 0;
+		}
+
+		pre code {
+			font-family: 'Consolas';
+			display: block;
+			padding: 12px;
+			padding-left: 20px;
+			margin: 2rem 0;
+			background: #f8fafc;
+			border-radius: 10px;
+			border: 1px solid #e2e8f0;
+			overflow-x: auto;
+			overflow-y: auto;
+			line-height: 1.6 !important;
+			font-size: 0.95rem !important;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+		}
+
+		table {
+			border-collapse: collapse !important;
+			border-spacing: 0 !important;
+			overflow-x: auto;
+			min-width: 600px !important;
+			font-size: 1rem !important;
+			width: 100%;
+			margin: 2rem 0;
+			border-radius: 10px;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+			border: 1px solid #e2e8f0;
+			background: white;
+		}
+
+		thead {
+			display: table-header-group;
+			vertical-align: middle;
+			unicode-bidi: isolate;
+			border-color: inherit;
+			border-radius: 10px;
+		}
+
+		tbody {
+			border-radius: 10px;
+		}
+
+		tr {
+			display: table-row;
+			vertical-align: inherit;
+			unicode-bidi: isolate;
+			border-color: inherit;
+		}
+
+		th {
+			background: #f8fafc !important;
+			font-weight: 600 !important;
+			color: #374151 !important;
+			border-bottom: 2px solid #e2e8f0 !important;
+		}
+
+		th,
+		td {
+			padding: 12px 16px !important;
+			font-size: 1rem !important;
+			border-bottom: 1px solid #e2e8f0;
+			border-right: 1px solid rgba(34, 36, 38, .1);
+			white-space: nowrap;
+		}
+
+		table tbody tr:hover {
+			background-color: #f8fafc;
+		}
+
+		.codecopy-btn {
+			opacity: 0.7 !important;
+			min-height: 1em;
+			outline: 0;
+			vertical-align: baseline;
+			position: absolute;
+			top: 10px !important;
+			right: 10px !important;
+			background: #f8fafc;
+			padding: 6px 10px !important;
+			color: rgba(0, 0, 0, 0.6);
+			border: 1px solid rgba(0, 0, 0, 0.1);
+			box-shadow: transparent 0px 0px 0px 1px inset, rgba(34, 36, 38, 0.15) 0px 0px 0px 0px inset;
+			cursor: pointer;
+			z-index: 10;
+			text-transform: none;
+			text-shadow: none;
+			font-weight: 700;
+			line-height: 1em;
+			font-style: normal;
+			text-align: center;
+			text-decoration: none;
+			border-radius: .28571429rem;
+			font-size: 0.8rem !important;
+			display: inline-block !important;
+			padding-block: 1px;
+			padding-inline: 6px;
+			margin: 0 .25em 0 0;
+		}
+
+		.codecopy-btn icon {
+			font-weight: 0.8rem !important;
+		}
+
+		.codecopy-btn:active {
+			background-color: rgb(186, 187, 188);
+			color: rgba(0, 0, 0, 0.9);
+		}
+
+		.codecopy-btn:hover {
+			background: #fff;
+			transform: translateY(-1px);
+			background-color: rgb(202, 203, 205);
+			box-shadow: transparent 0px 0px 0px 1px inset, rgba(34, 36, 38, 0.15) 0px 0px 0px 0px inset;
+			color: rgba(0, 0, 0, 0.8);
+		}
+
+		.codecopy-btn:focus {
+			background-color: rgb(202, 203, 205);
+			color: rgba(0, 0, 0, 0.8);
+		}
+	</style>
 </head>
+
 <body>
-    <div class="container">
-        <header>
-            <a href="index.html" class="back-button">
-                <i class="fas fa-arrow-left"></i> 返回首页
-            </a>
-            <h1 id="problem-title">题目加载中...</h1>
-            <div class="problem-info">
-                <span id="problem-id">ID: 加载中...</span>
-                <span id="problem-difficulty">难度: 加载中...</span>
-                <span id="problem-date">日期: 加载中...</span>
-            </div>
-        </header>
-        
-        <div class="problem-content">
-            <div class="markdown-content" id="problem-content">
-                <div class="loading">题目内容加载中...</div>
-            </div>
-        </div>
-        
-        <footer>
-            <p>陨星题目查看器 &copy; 2023 | 支持 Markdown + Katex + Hljs 渲染</p>
-        </footer>
-    </div>
+	<div class="container">
+		<header>
+			<h1>陨星</h1>
+			<div class="subtitle">Markdown + Katex + Hljs 题目查看器</div>
+		</header>
 
-    <!-- Marked.js for Markdown parsing -->
-    <script src="https://cdn.jsdmirror.com/npm/marked/marked.min.js"></script>
-    <!-- Katex for math rendering -->
-    <script src="https://cdn.jsdmirror.com/npm/katex@0.16.9/dist/katex.min.js"></script>
-    <!-- Katex auto-render script -->
-    <script src="https://cdn.jsdmirror.com/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-    <!-- Clipboard.js for copy buttons -->
-    <script src="https://cdn.jsdmirror.com/npm/clipboard@2.0.11/dist/clipboard.min.js"></script>
+		<div class="content-grid">
+			<div class="box intro-box">
+				<h2 class="box-title">📖 介绍</h2>
+				<div class="markdown-content" id="intro-content">
+					<div class="loading">加载中...</div>
+				</div>
+			</div>
 
-    <script>
-        // 配置Marked.js以支持Katex和代码高亮
-        marked.setOptions({
-            highlight: function(code, lang) {
-                if (lang && hljs.getLanguage(lang)) {
-                    return hljs.highlight(code, { language: lang }).value;
-                }
-                return hljs.highlightAuto(code).value;
-            },
-            gfm: true
-        });
+			<div class="box new-problems-box">
+				<h2 class="box-title">🆕 最新题目</h2>
+				<div id="new-problems-content">
+					<div class="loading">加载中...</div>
+				</div>
+			</div>
 
-        // 添加复制按钮功能
-        function addCopyButtons() {
-            const preElements = document.querySelectorAll('pre');
-            preElements.forEach(preElement => {
-                const codeElement = preElement.querySelector('code');
-                if (!codeElement) return;
-                
-                const button = document.createElement('button');
-                button.innerHTML = '<i class="fas fa-copy"></i>';
-                button.classList.add('codecopy-btn');
-                button.title = '复制代码';
-                
-                preElement.style.position = 'relative';
-                preElement.appendChild(button);
-                
-                new ClipboardJS(button, {
-                    text: () => codeElement.innerText
-                }).on('success', e => {
-                    e.trigger.innerHTML = '<i class="fas fa-check"></i>';
-                    setTimeout(() => e.trigger.innerHTML = '<i class="fas fa-copy"></i>', 1000);
-                }).on('error', e => {
-                    e.trigger.innerHTML = '<i class="fas fa-times"></i>';
-                    setTimeout(() => e.trigger.innerHTML = '<i class="fas fa-copy"></i>', 1000);
-                });
-            });
-        }
+			<div class="box comments-box">
+				<h2 class="box-title">💬 评论</h2>
+				<div class="giscus-comments" id="giscus-comments">
+					<!-- Giscus评论系统将在这里加载 -->
+				</div>
+			</div>
+		</div>
 
-        // 渲染Katex公式
-        function renderMath(element) {
-            if (window.renderMathInElement) {
-                renderMathInElement(element, {
-                    delimiters: [
-                        { left: "$$", right: "$$", display: true },
-                        { left: "\\[", right: "\\]", display: true },
-                        { left: "\\(", right: "\\)", display: false },
-                        { left: "$", right: "$", display: false }
-                    ],
-                    throwOnError: false
-                });
-            }
-        }
+		<footer>
+			<p>陨星题目查看器 &copy; 2023 | 支持 Markdown + Katex + Hljs 渲染</p>
+		</footer>
+	</div>
 
-        // 从URL获取题目ID
-        function getProblemIdFromURL() {
-            const path = window.location.pathname;
-            const match = path.match(/\/problem\/(YX[a-zA-Z0-9]+)$/);
-            if (match) {
-                return match[1];
-            }
-            
-            // 如果URL是problem.html?id=YX0001格式
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('id');
-        }
+	<!-- Marked.js for Markdown parsing -->
+	<script src="https://cdn.jsdmirror.com/npm/marked/marked.min.js"></script>
+	<!-- Katex for math rendering -->
+	<script src="https://cdn.jsdmirror.com/npm/katex@0.16.9/dist/katex.min.js"></script>
+	<!-- Katex auto-render script -->
+	<script src="https://cdn.jsdmirror.com/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+	<!-- Giscus for comments -->
+	<script src="https://unpkg.com/giscus@1.3.0/dist/giscus.js"></script>
 
-        // 加载题目内容
-        async function loadProblem() {
-            const problemId = getProblemIdFromURL();
-            
-            if (!problemId) {
-                document.getElementById('problem-content').innerHTML = 
-                    '<div class="error">未指定题目ID</div>';
-                return;
-            }
+	<script>
+		// 配置Marked.js以支持Katex和代码高亮
+		marked.setOptions({
+			highlight: function (code, lang) {
+				if (lang && hljs.getLanguage(lang)) {
+					return hljs.highlight(code, { language: lang }).value;
+				}
+				return hljs.highlightAuto(code).value;
+			},
+			gfm: true
+		});
 
-            try {
-                // 更新页面标题和ID显示
-                document.getElementById('problem-title').textContent = `题目: ${problemId}`;
-                document.getElementById('problem-id').textContent = `ID: ${problemId}`;
-                document.title = `${problemId} - 陨星`;
+		function addCopyButtons() {
+			const preElements = document.querySelectorAll('pre code');
+			preElements.forEach(codeElement => {
+				const button = document.createElement('button');
+				button.innerHTML = '<i class="fa-solid fa-copy"></i>';
+				button.classList.add('codecopy-btn');
 
-                // 加载题目Markdown文件
-                const response = await fetch(`./sources/problem/${problemId}.md`);
-                if (!response.ok) throw new Error('题目文件不存在或无法访问');
-                
-                const markdown = await response.text();
-                const contentElement = document.getElementById('problem-content');
-                contentElement.innerHTML = marked.parse(markdown);
+				const div = document.createElement('div');
+				div.style = "width:100%;position:relative;";
+				div.appendChild(button);
+				codeElement.before(div);
 
-                // 等待DOM更新后渲染公式和添加复制按钮
-                setTimeout(() => {
-                    renderMath(contentElement);
-                    addCopyButtons();
-                    hljs.highlightAll();
-                    
-                    // 尝试从Markdown中提取题目信息（如果存在元数据）
-                    extractProblemInfo(markdown, problemId);
-                }, 100);
+				new ClipboardJS(button, {
+					text: () => codeElement.innerText.replace(/\n\n/g, "\n")
+				}).on('success', e => {
+					e.trigger.innerHTML = '<i class="fa-solid fa-check"></i>';
+					setTimeout(() => e.trigger.innerHTML = '<i class="fa-solid fa-copy"></i>', 1000);
+				}).on('error', e => {
+					e.trigger.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+					setTimeout(() => e.trigger.innerHTML = '<i class="fa-solid fa-copy"></i>', 1000);
+				});
+			});
+		}
 
-            } catch (error) {
-                document.getElementById('problem-content').innerHTML = 
-                    `<div class="error">加载题目时出错: ${error.message}</div>`;
-                console.error('Error loading problem:', error);
-            }
-        }
+		// 渲染Katex公式
+		async function renderMath(element) {
+			if (window.renderMathInElement) {
+				// 确保KaTeX完全加载后才渲染
+				if (window.katex) {
+					renderMathInElement(element, {
+						delimiters: [
+							{ left: "$$", right: "$$", display: true },
+							{ left: "\\[", right: "\\]", display: true },
+							{ left: "\\(", right: "\\)", display: false },
+							{ left: "$", right: "$", display: false }
+						],
+						throwOnError: false
+					});
+				} else {
+					console.warn("KaTeX core not loaded yet.");
+					// 延迟渲染
+					setTimeout(() => renderMath(element), 100);
+				}
+			} else {
+				console.warn("KaTeX auto-render script not loaded yet.");
+				// 延迟渲染
+				setTimeout(() => renderMath(element), 100);
+			}
+			addCopyButtons();
+		}
 
-        // 从Markdown中提取题目信息（如果存在YAML front matter）
-        function extractProblemInfo(markdown, problemId) {
-            // 简单的元数据提取（可以扩展为解析YAML front matter）
-            const titleMatch = markdown.match(/^#\s+(.+)$/m);
-            if (titleMatch) {
-                document.getElementById('problem-title').textContent = titleMatch[1];
-                document.title = `${titleMatch[1]} - 陨星`;
-            }
+		// 加载介绍内容
+		async function loadIntro() {
+			try {
+				const response = await fetch('./sources/index.md');
+				if (!response.ok) throw new Error('无法加载介绍内容');
 
-            // 尝试从newp.json获取更多信息
-            fetch('./sources/newp.json')
-                .then(response => response.ok ? response.json() : null)
-                .then(data => {
-                    if (data && data.problems) {
-                        const problemInfo = data.problems.find(p => p.id === problemId);
-                        if (problemInfo) {
-                            if (problemInfo.difficulty) {
-                                document.getElementById('problem-difficulty').textContent = 
-                                    `难度: ${problemInfo.difficulty}`;
-                            }
-                            if (problemInfo.date) {
-                                document.getElementById('problem-date').textContent = 
-                                    `日期: ${problemInfo.date}`;
-                            }
-                        }
-                    }
-                })
-                .catch(error => console.log('无法加载题目额外信息:', error));
-        }
+				const markdown = await response.text();
+				const introContent = document.getElementById('intro-content');
+				introContent.innerHTML = marked.parse(markdown);
 
-        // 页面加载完成后初始化
-        document.addEventListener('DOMContentLoaded', loadProblem);
-    </script>
+				// 等待DOM更新后渲染公式
+				await new Promise(resolve => setTimeout(resolve, 0));
+				await renderMath(introContent);
+			} catch (error) {
+				document.getElementById('intro-content').innerHTML =
+					`<div class="error">加载介绍内容时出错: ${error.message}</div>`;
+			}
+		}
+
+		// 加载最新题目
+		async function loadNewProblems() {
+			try {
+				const response = await fetch('./sources/newp.json');
+				if (!response.ok) throw new Error('无法加载最新题目');
+
+				const data = await response.json();
+				const problemsContent = document.getElementById('new-problems-content');
+
+				if (data.problems && data.problems.length > 0) {
+					let html = '<ul class="problem-list">';
+					data.problems.forEach(problem => {
+						html += `
+                            <li class="problem-item">
+                                <a href="problem.html?id=${problem.id}" class="problem-link">${problem.title}</a>
+                                <div class="problem-meta">
+                                    <span>难度: ${problem.difficulty}</span>
+                                    <span>${problem.date}</span>
+                                </div>
+                            </li>
+                        `;
+					});
+					html += '</ul>';
+					problemsContent.innerHTML = html;
+				} else {
+					problemsContent.innerHTML = '<p>暂无最新题目</p>';
+				}
+			} catch (error) {
+				document.getElementById('new-problems-content').innerHTML =
+					`<div class="error">加载最新题目时出错: ${error.message}</div>`;
+			}
+		}
+
+		// 初始化Giscus评论系统
+		function initGiscus() {
+			const giscusContainer = document.getElementById('giscus-comments');
+
+			// 创建Giscus脚本元素
+			const script = document.createElement('script');
+			script.src = 'https://giscus.app/client.js';
+			script.setAttribute('data-repo', '[在此输入您的仓库]');
+			script.setAttribute('data-repo-id', '[在此输入仓库ID]');
+			script.setAttribute('data-category', '[在此输入分类]');
+			script.setAttribute('data-category-id', '[在此输入分类ID]');
+			script.setAttribute('data-mapping', 'pathname');
+			script.setAttribute('data-strict', '0');
+			script.setAttribute('data-reactions-enabled', '1');
+			script.setAttribute('data-emit-metadata', '0');
+			script.setAttribute('data-input-position', 'bottom');
+			script.setAttribute('data-theme', 'dark');
+			script.setAttribute('data-lang', 'zh-CN');
+			script.setAttribute('crossorigin', 'anonymous');
+			script.async = true;
+
+			giscusContainer.appendChild(script);
+		}
+
+		// 页面加载完成后初始化
+		document.addEventListener('DOMContentLoaded', () => {
+			loadIntro();
+			loadNewProblems();
+			initGiscus();
+		});
+
+		document.addEventListener('DOMContentLoaded', () => {
+			if (window.renderMathInElement) {
+				renderMathInElement(document.body, {
+					delimiters: [
+						{ left: "$$", right: "$$", display: true },
+						{ left: "\\[", right: "\\]", display: true },
+						{ left: "\\(", right: "\\)", display: false },
+						{ left: "$", right: "$", display: false }
+					],
+					throwOnError: false
+				});
+			}
+		});
+	</script>
+
+	<script>
+		// 确保所有库都加载完成后渲染页面中的数学公式
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', renderAllMath);
+		} else {
+			// DOM 已经加载完成
+			setTimeout(renderAllMath, 100);
+		}
+
+		function renderAllMath() {
+			if (window.katex && window.renderMathInElement) {
+				// 等待所有内容完全渲染
+				setTimeout(() => {
+					renderMathInElement(document.body, {
+						delimiters: [
+							{ left: "$$", right: "$$", display: true },
+							{ left: "\\[", right: "\\]", display: true },
+							{ left: "\\(", right: "\\)", display: false },
+							{ left: "$", right: "$", display: false }
+						],
+						throwOnError: false
+					});
+				}, 200); // 给Marked.js一些时间渲染Markdown
+			} else {
+				// 如果库还没加载完，再等一下
+				setTimeout(renderAllMath, 100);
+			}
+		}
+	</script>
 </body>
+
 </html>
