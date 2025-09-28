@@ -23,4 +23,3 @@ $\textcolor{white}{没有人会注意，天上少了颗星……就像……没�
 科技
 
 ![](https://cdn.luogu.com.cn/upload/image_hosting/xxk5lzp4.png)
-
