@@ -3,7 +3,7 @@ $\textcolor{black}{\ \ \ \ 人烟稀渺，}\newline$
 $\textcolor{blue}{\ \ \ \ \ \ \ \ 流星尾焰划过天空，}\newline$
 $\textcolor{purple}{\ \ \ \  坠入荒野之中……}\newline$
 $\textcolor{white}{没有人会注意，天上少了颗星……就像……没人注意这段话……}\newline$
-# $\textcolor{purple}{星辰陨落，}$$\textcolor{black}{真相藏于混沌深处，}\\$$\textcolor{red}{\ \ \ \ \ \ \ \ 无人踏足……}$
+# $\textcolor{purple}{星辰陨落，}$$\textcolor{black}{真相藏于混沌深处，}\newline$$\textcolor{red}{\ \ \ \ \ \ \ \ 无人踏足……}$
 
 
 **幻星大陆**
@@ -23,3 +23,4 @@ $\textcolor{white}{没有人会注意，天上少了颗星……就像……没�
 科技
 
 ![](https://cdn.luogu.com.cn/upload/image_hosting/xxk5lzp4.png)
+
