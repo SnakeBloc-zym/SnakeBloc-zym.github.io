@@ -1,5 +1,3 @@
-# _陨星_
-
 $\textcolor{green}{一个小小的地方，}\newline$
 $\textcolor{black}{\ \ \ \ 人烟稀渺，}\newline$
 $\textcolor{blue}{\ \ \ \ \ \ \ \ 流星尾焰划过天空，}\newline$
@@ -23,6 +21,7 @@ $\textcolor{white}{没有人会注意，天上少了颗星……就像……没�
 
 **勇星大陆**
 科技
+
 
 
 
